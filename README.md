@@ -1,5 +1,7 @@
 # Apollo GraphQL User Directory (local dev stack)
 
+> **New here?** Follow the beginner-friendly, from-scratch guide in [TUTORIAL.md](TUTORIAL.md).
+
 A local, four-service stack:
 
 ```
