@@ -1,0 +1,54 @@
+extend schema
+    @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
+
+type User @key(fields: "id") {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    gender: Gender!
+    heightCm: Int!
+    weightKg: Int!
+    location: Location!
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+}
+
+enum Location {
+    BANGALORE
+    CHENNAI
+    SALEM
+    HYDERABAD
+}
+
+input CreateUserInput {
+    firstName: String!
+    lastName: String!
+    gender: Gender!
+    heightCm: Int!
+    weightKg: Int!
+    location: Location!
+}
+
+input UserSearchInput {
+    firstName: String
+    lastName: String
+    gender: Gender
+    location: Location
+}
+
+type Query {
+    "List every saved user"
+    users: [User!]!
+    "Search saved users by any combination of filters"
+    searchUsers(filter: UserSearchInput!): [User!]!
+    "Fetch a single user by id"
+    user(id: ID!): User
+}
+
+type Mutation {
+    createUser(input: CreateUserInput!): User!
+}

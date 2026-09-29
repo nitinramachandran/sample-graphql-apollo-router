@@ -1,0 +1,26 @@
+supergraph:
+  listen: 0.0.0.0:4000
+  introspection: true
+
+sandbox:
+  enabled: true
+
+homepage:
+  enabled: false
+
+cors:
+  policies:
+    - origins:
+        - http://localhost:5173
+      allow_credentials: false
+      methods:
+        - GET
+        - POST
+        - OPTIONS
+      allow_headers:
+        - Content-Type
+        - Authorization
+
+health_check:
+  listen: 0.0.0.0:8088
+  enabled: true

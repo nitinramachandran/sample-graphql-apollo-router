@@ -1,0 +1,109 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+{
+  query: Query
+  mutation: Mutation
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+input CreateUserInput
+  @join__type(graph: USERS)
+{
+  firstName: String!
+  gender: Gender!
+  heightCm: Int!
+  lastName: String!
+  location: Location!
+  weightKg: Int!
+}
+
+enum Gender
+  @join__type(graph: USERS)
+{
+  FEMALE @join__enumValue(graph: USERS)
+  MALE @join__enumValue(graph: USERS)
+  OTHER @join__enumValue(graph: USERS)
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  USERS @join__graph(name: "users", url: "http://localhost:4001/graphql")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+enum Location
+  @join__type(graph: USERS)
+{
+  BANGALORE @join__enumValue(graph: USERS)
+  CHENNAI @join__enumValue(graph: USERS)
+  HYDERABAD @join__enumValue(graph: USERS)
+  SALEM @join__enumValue(graph: USERS)
+}
+
+type Mutation
+  @join__type(graph: USERS)
+{
+  createUser(input: CreateUserInput!): User!
+}
+
+type Query
+  @join__type(graph: USERS)
+{
+  """Search saved users by any combination of filters"""
+  searchUsers(filter: UserSearchInput!): [User!]!
+
+  """Fetch a single user by id"""
+  user(id: ID!): User
+
+  """List every saved user"""
+  users: [User!]!
+}
+
+type User
+  @join__type(graph: USERS, key: "id", resolvable: true)
+{
+  firstName: String!
+  gender: Gender!
+  heightCm: Int!
+  id: ID!
+  lastName: String!
+  location: Location!
+  weightKg: Int!
+}
+
+input UserSearchInput
+  @join__type(graph: USERS)
+{
+  firstName: String
+  gender: Gender
+  lastName: String
+  location: Location
+}

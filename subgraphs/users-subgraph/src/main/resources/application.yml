@@ -1,0 +1,16 @@
+server:
+  port: 4001
+
+spring:
+  application:
+    name: users-subgraph
+  graphql:
+    graphiql:
+      enabled: true
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "*"
+      allowed-headers: "*"
+
+microservice:
+  base-url: http://localhost:8080
